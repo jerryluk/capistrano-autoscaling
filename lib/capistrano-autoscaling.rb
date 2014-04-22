@@ -173,6 +173,7 @@ module Capistrano
             options = {
               :min_size => fetch(:autoscaling_group_min_size, autoscaling_min_size),
               :max_size => fetch(:autoscaling_group_max_size, autoscaling_max_size),
+              :health_check_grace_period => fetch(:autoscaling_health_check_grace_period, 0),
             }
             if autoscaling_group_subnets and not autoscaling_group_subnets.empty?
               # VPC
@@ -413,7 +414,7 @@ module Capistrano
               if autoscaling_shrink_policy and autoscaling_shrink_policy.exists?
                 logger.debug("Found ScalingPolicy for shrinking: #{autoscaling_shrink_policy.name}")
               else
-                logger.debug("Createing ScalingPolicy for shrinking: #{autoscaling_shrink_policy_name}")
+                logger.debug("Creating ScalingPolicy for shrinking: #{autoscaling_shrink_policy_name}")
                 set(:autoscaling_shrink_policy, autoscaling_group.scaling_policies.create(autoscaling_shrink_policy_name,
                                                                                           autoscaling_shrink_policy_options))
                 sleep(autoscaling_wait_interval) unless autoscaling_shrink_policy.exists?
