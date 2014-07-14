@@ -161,7 +161,15 @@ module Capistrano
           _cset(:autoscaling_launch_configuration_options) {
             {
               :security_groups => autoscaling_launch_configuration_security_groups,
-            }.merge(fetch(:autoscaling_launch_configuration_extra_options, {}))
+            }.merge(fetch(:autoscaling_launch_configuration_extra_options, {
+              :block_device_mappings => [{
+                :device_name => "/dev/sda1", 
+                :ebs => {
+                  :volume_type => "gp2", :delete_on_termination => true, :volume_size =>10
+                }
+              }],
+              :detailed_instance_monitoring => true, :associate_public_ip_address => false}
+              ))
           }
 
 ## AutoScalingGroup
